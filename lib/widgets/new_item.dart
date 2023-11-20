@@ -13,12 +13,25 @@ class _NewItemState extends State<NewItem> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add a new item'),
-
       ),
       body: Padding(
         padding: const EdgeInsets.all(12),
-        child: Text('The form'),
-        
+        child: Column(
+          children: [
+            TextFormField(
+              maxLength: 50,
+              decoration: InputDecoration(
+                label: Text('Name'),
+              ),
+              validator: (value){
+                if(value == null || value.isEmpty){
+                  return 'Please enter a name';
+                }
+                return null;
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
