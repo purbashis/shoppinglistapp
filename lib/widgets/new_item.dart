@@ -91,7 +91,9 @@ class _NewItemState extends State<NewItem> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(onPressed: () {}, child: Text('Reset')),
+                  TextButton(onPressed: () {
+                    _formKey.currentState!.reset();
+                  }, child: Text('Reset')),
                   ElevatedButton(onPressed: _saveItem, child: Text('Add Item'))
                 ],
               )
