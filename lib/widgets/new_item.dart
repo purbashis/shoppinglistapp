@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+
 import 'package:shoppinglistapp/data/category.dart';
 import 'package:shoppinglistapp/models/categories.dart';
 import 'package:shoppinglistapp/models/grocery_item.dart';
@@ -7,12 +9,14 @@ class NewItem extends StatefulWidget {
   const NewItem({super.key});
 
   @override
-  State<NewItem> createState() => _NewItemState();
+  State<NewItem> createState() {
+    return _NewItemState();
+  }
 }
 
 class _NewItemState extends State<NewItem> {
   final _formKey = GlobalKey<FormState>();
-  var _enteredItemName = '';
+  var _enteredName = '';
   var _enteredQuantity = 1;
   var _selectedCategory = categories[Categories.vegetables]!;
 
@@ -21,14 +25,12 @@ class _NewItemState extends State<NewItem> {
       _formKey.currentState!.save();
       Navigator.of(context).pop(
         GroceryItem(
-            id: DateTime.now().toString(),
-            name: _enteredItemName,
-            quantity: _enteredQuantity,
-            category: _selectedCategory),
+          id: DateTime.now().toString(),
+          name: _enteredName,
+          quantity: _enteredQuantity,
+          category: _selectedCategory,
+        ),
       );
-      // print(_enteredItemName);
-      // print(_selectedCategory);
-      // print(_selectedCategory);
     }
   }
 
@@ -46,7 +48,7 @@ class _NewItemState extends State<NewItem> {
             children: [
               TextFormField(
                 maxLength: 50,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   label: Text('Name'),
                 ),
                 validator: (value) {
@@ -54,18 +56,17 @@ class _NewItemState extends State<NewItem> {
                       value.isEmpty ||
                       value.trim().length <= 1 ||
                       value.trim().length > 50) {
-                    return 'Must be between 1 and 50 characters . ';
+                    return 'Must be between 1 and 50 characters.';
                   }
                   return null;
                 },
                 onSaved: (value) {
-                  //  if (value == null){
+                  // if (value == null) {
                   //   return;
-                  //  }
-
-                  _enteredItemName = value!;
+                  // }
+                  _enteredName = value!;
                 },
-              ),
+              ), // instead of TextField()
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -80,8 +81,8 @@ class _NewItemState extends State<NewItem> {
                         if (value == null ||
                             value.isEmpty ||
                             int.tryParse(value) == null ||
-                            int.tryParse(value) != 0) {
-                          return 'Must be a valid positive number ';
+                            int.tryParse(value)! <= 0) {
+                          return 'Must be a valid, positive number.';
                         }
                         return null;
                       },
@@ -93,46 +94,49 @@ class _NewItemState extends State<NewItem> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: DropdownButtonFormField(
-                        value: _selectedCategory,
-                        items: [
-                          for (final category in categories.entries)
-                            DropdownMenuItem(
-                              value: category.value,
-                              child: Row(children: [
+                      value: _selectedCategory,
+                      items: [
+                        for (final category in categories.entries)
+                          DropdownMenuItem(
+                            value: category.value,
+                            child: Row(
+                              children: [
                                 Container(
                                   width: 16,
                                   height: 16,
                                   color: category.value.color,
                                 ),
-                                const SizedBox(
-                                  width: 6,
-                                ),
+                                const SizedBox(width: 6),
                                 Text(category.value.title),
-                              ]),
-                            )
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedCategory = value!;
-                          });
-                        }),
-                  )
+                              ],
+                            ),
+                          ),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedCategory = value!;
+                        });
+                      },
+                    ),
+                  ),
                 ],
               ),
-              const SizedBox(
-                height: 12,
-              ),
+              const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                      onPressed: () {
-                        _formKey.currentState!.reset();
-                      },
-                      child: Text('Reset')),
-                  ElevatedButton(onPressed: _saveItem, child: Text('Add Item'))
+                    onPressed: () {
+                      _formKey.currentState!.reset();
+                    },
+                    child: const Text('Reset'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _saveItem,
+                    child: const Text('Add Item'),
+                  )
                 ],
-              )
+              ),
             ],
           ),
         ),
