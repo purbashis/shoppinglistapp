@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+
 import 'package:shoppinglistapp/data/category.dart';
 import 'package:shoppinglistapp/models/categories.dart';
 import 'package:shoppinglistapp/models/grocery_item.dart';
@@ -21,11 +22,12 @@ class _NewItemState extends State<NewItem> {
   var _enteredName = '';
   var _enteredQuantity = 1;
   var _selectedCategory = categories[Categories.vegetables]!;
+
   void _saveItem() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      final url = Uri.https('flutter-prep-845ac-default-rtdb.firebaseio.com',
-          'shopping-list.json');
+      final url = Uri.https(
+          'flutter-prep-845ac-default-rtdb.firebaseio.com', 'shopping-list.json');
       final response = await http.post(
         url,
         headers: {
@@ -39,15 +41,21 @@ class _NewItemState extends State<NewItem> {
           },
         ),
       );
-      print(response.body);
-      print(response.statusCode);
+
+      final Map<String, dynamic> resData = json.decode(response.body);
 
       if (!context.mounted) {
         return;
       }
-      Navigator.of(context).pop();
 
-      // Navigator.of(context).pop();
+      Navigator.of(context).pop(
+        GroceryItem(
+          id: resData['name'],
+          name: _enteredName,
+          quantity: _enteredQuantity,
+          category: _selectedCategory,
+        ),
+      );
     }
   }
 
