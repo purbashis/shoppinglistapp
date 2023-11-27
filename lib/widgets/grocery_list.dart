@@ -141,6 +141,7 @@ try {
         ),
       );
     }
+    // error handler 
     if (_error != null) {
       content = Center(child: Text(_error!));
     }
