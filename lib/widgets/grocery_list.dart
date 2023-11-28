@@ -29,11 +29,10 @@ class _GroceryListState extends State<GroceryList> {
     final url = Uri.https(
         'flutter-prep-845ac-default-rtdb.firebaseio.com', 'shopping-list.json');
 
-try {
-     final response = await http.get(url);
-      if (response.statusCode >= 400) {
-     
-      } // >400 = error catch block take out that set state 
+    try {
+      final response = await http.get(url);
+      if (response.statusCode >=
+          400) {} // >400 = error catch block take out that set state
 
       if (response.body == 'null') {
         setState(() {
@@ -42,7 +41,7 @@ try {
         return;
       }
 
-       final Map<String, dynamic> listData = json.decode(response.body);
+      final Map<String, dynamic> listData = json.decode(response.body);
       final List<GroceryItem> loadedItems = [];
       for (final item in listData.entries) {
         final category = categories.entries
@@ -62,20 +61,11 @@ try {
         _groceryItems = loadedItems;
         _isLoading = false;
       });
-}catch (error){
+    } catch (error) {
       setState(() {
         _error = 'Something went Wrong ! Please try again later .';
       });
-
-}
-
- 
-
-
-
-   
-
-  
+    }
   }
 
   void _addItem() async {
@@ -141,7 +131,7 @@ try {
         ),
       );
     }
-    // error handler 
+    // error handler
     if (_error != null) {
       content = Center(child: Text(_error!));
     }
